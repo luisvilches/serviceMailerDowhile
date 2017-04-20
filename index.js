@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser')
 const NodeMailer = require('nodemailer');
+const fs = require('fs')
 
 let app = express();
 
@@ -15,23 +16,15 @@ app.post('/send', (req,res) => {
     let asunto = req.body.asunto
     let mensaje = req.body.mensaje
 
-    let template = `<html>
-        <head>
-            <title>Formulario de Contacto web Dowhile</title>
-        </head>
-        <body>
-            <section>
-                <h3>Mensaje desde el formulario de contacto!!</h3>
-                <h4><b>Remitente: </b>${nombre} < ${remitente} > </h4>
-                <h4><b>Telefono: </b>${telefono}</h4>
-                <h4><b>Asunto: </b>${asunto}</h4>
-                <br>
-                <h4><b>Mensaje:</b></h4>
-                <hr>
-                <h4>${mensaje}</h4>
-            </section>
-        </body>
-    </html>`
+    let template = '<section>'+'<br><h3>Mensaje desde el formulario de contacto!!</h3><br>'+
+                    '<h4><b>Remitente: </b>'+nombre+' < '+remitente+ '> </h4><br>'+
+                    '<h4><b>Telefono: </b>'+telefono+'</h4><br>'+
+                    '<h4><b>Asunto: </b>'+asunto+'</h4><br>'+
+                    '<h4><b>Mensaje:</b></h4>'+
+                    '<hr>'+
+                    '<h4>'+mensaje+'</h4>'+
+                    '</section>';
+
 
     let mailOptions = {
         from: remitente,
@@ -64,6 +57,10 @@ app.post('/send', (req,res) => {
         res.status(200).send(info);
     }
 });
+})
+
+app.get('/test', (req,res) => {
+    fs.appendFileSync('message.js', `Router.post('/app', controller.dowhile.dowhile); \n`);
 })
 
 app.listen(3000);
