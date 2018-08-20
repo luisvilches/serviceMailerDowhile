@@ -1,14 +1,11 @@
 const express = require('express');
-const bodyParser = require('body-parser')
+const bodyParser = require('connect-multiparty')();
 const NodeMailer = require('nodemailer');
-const fs = require('fs')
+const app = express();
+const port = 5005;
 
-let app = express();
-let port = proccess.env.PORT || 5000;
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: false}));
 
-app.post('/send', (req,res) => {
+app.post('/send',bodyParser, (req,res) => {
 
     let remitente = req.body.mail
     let telefono = req.body.telefono
@@ -16,10 +13,10 @@ app.post('/send', (req,res) => {
     let asunto = req.body.asunto
     let mensaje = req.body.mensaje
 
-    let template = '<section>'+'<br><h3>Mensaje desde el formulario de contacto!!</h3><br>'+
-                    '<h4><b>Remitente: </b>'+nombre+' < '+remitente+ '> </h4><br>'+
-                    '<h4><b>Telefono: </b>'+telefono+'</h4><br>'+
-                    '<h4><b>Asunto: </b>'+asunto+'</h4><br>'+
+    let template = '<section>'+'<br><h3>Mensaje desde el formulario de contacto!!</h3>'+
+                    '<h4><b>Remitente: </b>'+nombre+' < '+remitente+ '> </h4>'+
+                    '<h4><b>Telefono: </b>'+telefono+'</h4>'+
+                    '<h4><b>Asunto: </b>'+asunto+'</h4>'+
                     '<h4><b>Mensaje:</b></h4>'+
                     '<hr>'+
                     '<h4>'+mensaje+'</h4>'+
@@ -28,39 +25,39 @@ app.post('/send', (req,res) => {
 
     let mailOptions = {
         from: remitente,
-        to: 'luis@dowhile.cl, laura@dowhile.cl',
+        to: 'lvilches21@gmail.com',
         subject: 'Formulario de contacto web',
         html: template
     };
 
     let smtpConfig = {
-        host: 'mail.dowhile.cl',
-        port: 587,
+        host: 'smtp.gmail.com',
+        port: 465,
+        secure: true,
         tls: {
             rejectUnauthorized:false
         },
-        secure: false, // upgrade later with STARTTLS
         auth: {
-            user: 'info@dowhile.cl',
-            pass: 'd0wh1l3' 
-        }
+	        user: 'lvilches21@gmail.com',
+	        pass: 'andres3190'
+	    }
     };
 
     let transporter = NodeMailer.createTransport(smtpConfig);
 
     transporter.sendMail(mailOptions, function(error, info){
-    if (error){
-        console.log(error);
-        res.send(500, error.message);
-    } else {
-        console.log("Email sent");
-        res.status(200).send(info);
-    }
+        if (error){
+            console.log(error);
+            res.send(500, error.message);
+        } else {
+            console.log("Email sent");
+            res.status(200).send(info);
+        }
+    });
+})
+
+
+app.listen(port, function(err){
+    if(err) throw err;
+    console.log('server running in port 5000');
 });
-})
-
-app.get('/test', (req,res) => {
-    fs.appendFileSync('message.js', `Router.post('/app', controller.dowhile.dowhile); \n`);
-})
-
-app.listen(port);
