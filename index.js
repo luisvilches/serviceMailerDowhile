@@ -50,10 +50,10 @@ app.post('/send',bodyParser, (req,res) => {
     transporter.sendMail(mailOptions, function(error, info){
         if (error){
             console.log(error);
-            res.send(500, error.message);
+            res.status(500).json({error:error});
         } else {
             console.log("Email sent");
-            res.status(200).send(info);
+            res.status(200).json({message:"Email Send"});
         }
     });
 })
