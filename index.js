@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('connect-multiparty')();
 const NodeMailer = require('nodemailer');
+const smtpTransport = require('nodemailer-smtp-transport');
 const cors = require("cors");
 const app = express();
 const port = process.env.PORT || 5005;
@@ -32,20 +33,15 @@ app.post('/send',bodyParser, (req,res) => {
         html: template
     };
 
-    let smtpConfig = {
-        host: 'smtp.gmail.com',
-        port: 465,
-        secure: true,
-        tls: {
-            rejectUnauthorized:false
-        },
+    let transporter = NodeMailer.createTransport(smtpTransport({
+        service: 'gmail',
         auth: {
-	        user: 'lvilches21@gmail.com',
-	        pass: 'andres3190'
-	    }
-    };
-
-    let transporter = NodeMailer.createTransport(smtpConfig);
+            //user: 'no.reply.videomanias@gmail.com',
+            //pass: 'videomanias2017'
+            user: 'lvilches21@gmail.com',
+            pass: 'andres3190'
+        }
+    }));
 
     transporter.sendMail(mailOptions, function(error, info){
         if (error){
@@ -55,7 +51,7 @@ app.post('/send',bodyParser, (req,res) => {
             console.log("Email sent");
             res.status(200).json({message:"Email Send"});
         }
-    });
+    })
 })
 
 
