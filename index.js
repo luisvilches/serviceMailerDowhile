@@ -33,7 +33,7 @@ app.post('/send',bodyParser, (req,res) => {
         html: template
     };
 
-    let transporter = NodeMailer.createTransport(smtpTransport({
+    /*let transporter = NodeMailer.createTransport(smtpTransport({
         service: 'gmail',
         auth: {
             //user: 'no.reply.videomanias@gmail.com',
@@ -41,7 +41,15 @@ app.post('/send',bodyParser, (req,res) => {
             user: 'lvilches21@gmail.com',
             pass: 'andres3190'
         }
-    }));
+    }));*/
+
+    var transporter = NodeMailer.createTransport({
+        service: "gmail",
+        auth: {
+        user: "lvilches21@gmail.com", // Cambialo por tu email
+        pass: "andres3190" // Cambialo por tu password
+        }
+    });
 
     transporter.sendMail(mailOptions, function(error, info){
         if (error){
