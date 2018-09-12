@@ -11,6 +11,7 @@
   "license": "MIT",
   "dependencies": {
     "connect-multiparty": "^2.1.1",
+    "cors": "^2.8.4",
     "express": "^4.15.2",
     "nodemailer": "^4.0.1"
   }

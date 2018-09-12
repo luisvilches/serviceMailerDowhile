@@ -1,9 +1,11 @@
 const express = require('express');
 const bodyParser = require('connect-multiparty')();
 const NodeMailer = require('nodemailer');
+const cors = require("cors");
 const app = express();
-const port = 5005;
+const port = process.env.PORT || 5005;
 
+app.use(cors());
 
 app.post('/send',bodyParser, (req,res) => {
 
